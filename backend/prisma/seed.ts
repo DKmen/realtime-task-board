@@ -25,6 +25,31 @@ async function main() {
     create: { email: 'bob@example.com', name: 'Bob' },
   });
 
+  // create default user
+  await prisma.user.upsert({
+    where: { email: 'allen.anish@shopup.org' },
+    update: {},
+    create: { email: 'allen.anish@shopup.org', name: 'Allen Anish' },
+  });
+
+  await prisma.user.upsert({
+    where: { email: 'shrijeeth.s@silqfi.com' },
+    update: {},
+    create: { email: 'shrijeeth.s@silqfi.com', name: 'Shrijeeth S' },
+  });
+
+  await prisma.user.upsert({
+    where: { email: 'soorya@shopup.org' },
+    update: {},
+    create: { email: 'soorya@shopup.org', name: 'Soorya' },
+  });
+
+  await prisma.user.upsert({
+    where: { email: 'vishal.ramaprabhu@shopup.org' },
+    update: {},
+    create: { email: 'vishal.ramaprabhu@shopup.org', name: 'Vishal Ramaprabhu' },
+  });
+
   // Create sample tasks only if none exist (prevents duplicates on restarts)
   const existingCount = await prisma.task.count();
   if (existingCount === 0) {
