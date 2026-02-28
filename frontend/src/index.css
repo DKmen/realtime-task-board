@@ -1,0 +1,4 @@
+/* Global styles — layout handled per-component in App.css */
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; }
+

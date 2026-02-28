@@ -1,0 +1,52 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum TStatus {
+  TODO
+  PROGRESS
+  DONE
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  lockedTasks     Task[] @relation("DragLock")
+  editLockedTasks Task[] @relation("EditLock")
+
+  @@map("users")
+}
+
+model Task {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  status      TStatus  @default(TODO)
+  orderId     Int      @default(autoincrement()) @map("order_id")
+
+  lockAcquiredBy   String?   @map("lock_acquired_by")
+  isLocked         Boolean   @default(false) @map("is_locked")
+  lockAcquireTime  DateTime? @map("lock_acquire_time")
+
+  editLockAcquiredBy  String?   @map("edit_lock_acquired_by")
+  isEditLocked        Boolean   @default(false) @map("is_edit_locked")
+  editLockAcquireTime DateTime? @map("edit_lock_acquire_time")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  lockedBy     User? @relation("DragLock", fields: [lockAcquiredBy],     references: [id])
+  editLockedBy User? @relation("EditLock", fields: [editLockAcquiredBy], references: [id])
+
+  @@map("tasks")
+}
